@@ -6,10 +6,22 @@
 
 package pongline.data;
 
+import pongline.data.matlib.Vector2f;
+import pongline.display.Asset;
+
 /**
  *
  * @author Keith
  */
 public class Paddle extends Entity {
+
+    /**
+     * Constructs a new paddle.
+     * @param pos the position
+     * @param vel the velocity
+     */
+    public Paddle(Vector2f pos, Vector2f vel) {
+        super(pos, vel, Asset.PADDLE);
+    }
     
 }

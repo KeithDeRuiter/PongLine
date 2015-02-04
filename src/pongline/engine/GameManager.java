@@ -6,10 +6,29 @@
 
 package pongline.engine;
 
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import pongline.data.Entity;
+
 /**
  *
  * @author Keith
  */
 public class GameManager {
     
+    private List<Entity> entities;
+    
+    private ScheduledExecutorService executor;
+    
+    private long previousUpdateTime;
+    
+    public GameManager() {
+        executor = Executors.newSingleThreadScheduledExecutor();
+    }
+    
+    
+    public void launch() {
+        
+    }
 }

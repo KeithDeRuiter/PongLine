@@ -6,10 +6,21 @@
 
 package pongline.data;
 
+import pongline.data.matlib.Vector2f;
+import pongline.display.Asset;
+
 /**
  *
  * @author Keith
  */
 public class Ball extends Entity {
-    
+
+    /**
+     * Constructs a new Ball.
+     * @param pos the position
+     * @param vel the Velocity
+     */
+    public Ball(Vector2f pos, Vector2f vel) {
+        super(pos, vel, Asset.BALL);
+    }
 }
