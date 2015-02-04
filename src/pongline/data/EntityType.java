@@ -6,6 +6,8 @@
 
 package pongline.data;
 
+import pongline.display.Asset;
+
 /**
  *
  * @author Keith
@@ -13,5 +15,18 @@ package pongline.data;
 public enum EntityType {
     BALL,
     PADDLE,
-    WALL
+    WALL;
+    
+    public static Asset getAssetForEntityType(EntityType type) {
+        Asset asset = null;
+        switch(type) {
+            case BALL:
+                asset = Asset.BALL;
+                break;
+            case PADDLE:
+                asset = Asset.BALL;
+                break;
+        }
+        return asset;
+    }
 }

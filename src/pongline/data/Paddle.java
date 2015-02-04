@@ -21,7 +21,7 @@ public class Paddle extends Entity {
      * @param vel the velocity
      */
     public Paddle(Vector2f pos, Vector2f vel) {
-        super(pos, vel, Asset.PADDLE);
+        super(pos, vel, EntityType.PADDLE);
     }
     
 }

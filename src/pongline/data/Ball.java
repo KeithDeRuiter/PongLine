@@ -7,7 +7,6 @@
 package pongline.data;
 
 import pongline.data.matlib.Vector2f;
-import pongline.display.Asset;
 
 /**
  *
@@ -21,6 +20,6 @@ public class Ball extends Entity {
      * @param vel the Velocity
      */
     public Ball(Vector2f pos, Vector2f vel) {
-        super(pos, vel, Asset.BALL);
+        super(pos, vel, EntityType.BALL);
     }
 }

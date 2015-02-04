@@ -27,15 +27,15 @@ public abstract class Entity {
     protected Vector2f velocity;
     
     /**
-     * The asset that should be used for this entity.
+     * The type of entity.
      */
-    protected Asset asset;
+    protected EntityType type;
 
     
-    public Entity(Vector2f pos, Vector2f vel, Asset asset) {
+    public Entity(Vector2f pos, Vector2f vel, EntityType type) {
         this.position = pos;
         this.velocity = vel;
-        this.asset = asset;
+        this.type = type;
     }
     
     
@@ -55,12 +55,12 @@ public abstract class Entity {
         this.velocity = velocity;
     }
 
-    public Asset getAsset() {
-        return asset;
+    public EntityType getType() {
+        return type;
     }
 
-    public void setAsset(Asset asset) {
-        this.asset = asset;
+    public void setAsset(EntityType type) {
+        this.type = type;
     }
     
     public void translate(Vector2f delta) {
