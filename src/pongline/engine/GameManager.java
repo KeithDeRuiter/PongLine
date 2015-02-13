@@ -6,6 +6,7 @@
 
 package pongline.engine;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -13,6 +14,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import pongline.data.Ball;
 import pongline.data.Entity;
+import pongline.data.GameEvent;
 import pongline.data.GameState;
 import pongline.data.matlib.Vector2f;
 import pongline.display.GameDisplay;
@@ -70,14 +72,29 @@ public class GameManager {
         }
         
         //Logic
+        List<GameEvent> events = new ArrayList<>();
         
         //Display
-        display.setState(new GameState(entities));
+        display.setState(new GameState(entities, events));
     }
     
     private Entity createRandomBall() {
         Vector2f pos = new Vector2f(rand.nextFloat() * WORLD_WIDTH, rand.nextFloat() * WORLD_HEIGHT);
         Vector2f vel = new Vector2f(rand.nextFloat(), rand.nextFloat());
         return new Ball(pos, vel);
+    }
+    
+    private void checkForCollision() {
+        for(Entity e : entities) {
+            Vector2f pos = e.getPosition();
+            float width = e.getWidth();
+            float height = e.getHeight();
+            
+            if(e instanceof Ball) {
+//                if(pos.x > ) {
+//                    
+//                }
+            }
+        }
     }
 }

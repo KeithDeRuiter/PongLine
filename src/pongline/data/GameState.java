@@ -18,12 +18,22 @@ public class GameState {
      */
     private final List<Entity> entities;
     
-    public GameState(List<Entity> entities) {
+    /**
+     * Events that occurred this game loop.
+     */
+    private final List<GameEvent> events;
+    
+    public GameState(List<Entity> entities, List<GameEvent> events) {
         this.entities = entities;
+        this.events = events;
     }
     
     public List<Entity> getEntities() {
         return entities;
+    }
+    
+    public List<GameEvent> getEvents() {
+        return events;
     }
     
 }

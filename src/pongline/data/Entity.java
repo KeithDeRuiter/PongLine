@@ -29,11 +29,23 @@ public abstract class Entity {
      * The type of entity.
      */
     protected EntityType type;
+    
+    /**
+     * The width of the entity.
+     */
+    protected float width;
+    
+    /**
+     * The height of the entity.
+     */
+    protected float height;
 
     
-    public Entity(Vector2f pos, Vector2f vel, EntityType type) {
+    public Entity(Vector2f pos, Vector2f vel, float width, float height, EntityType type) {
         this.position = pos;
         this.velocity = vel;
+        this.width = width;
+        this.height = height;
         this.type = type;
     }
     
@@ -54,6 +66,22 @@ public abstract class Entity {
         this.velocity = velocity;
     }
 
+    public float getWidth() {
+        return this.width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public float getHeight() {
+        return this.height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
+    }
+    
     public EntityType getType() {
         return type;
     }

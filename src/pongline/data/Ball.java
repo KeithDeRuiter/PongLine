@@ -20,6 +20,6 @@ public class Ball extends Entity {
      * @param vel the Velocity
      */
     public Ball(Vector2f pos, Vector2f vel) {
-        super(pos, vel, EntityType.BALL);
+        super(pos, vel, 20, 20, EntityType.BALL);
     }
 }
