@@ -24,7 +24,7 @@ public enum EntityType {
                 asset = Asset.BALL;
                 break;
             case PADDLE:
-                asset = Asset.BALL;
+                asset = Asset.PADDLE;
                 break;
         }
         return asset;
