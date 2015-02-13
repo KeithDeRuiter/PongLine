@@ -7,7 +7,6 @@
 package pongline.data;
 
 import pongline.data.matlib.Vector2f;
-import pongline.display.Asset;
 
 
 
@@ -22,7 +21,7 @@ public abstract class Entity {
     protected Vector2f position;
 
     /**
-     * The velocity, represented using floats.  Not a unit vector.
+     * The velocity in units per second, represented using floats.  Not a unit vector.
      */
     protected Vector2f velocity;
     
@@ -65,6 +64,15 @@ public abstract class Entity {
     
     public void translate(Vector2f delta) {
         this.position.add(delta);
+    }
+    
+    /**
+     * Updates the state of this method.
+     * @param dt The time since last update, in milliseconds.
+     */
+    public void update(long dt) {
+        Vector2f delta = velocity.multiply((float)dt / 1000.0f);
+        translate(delta);
     }
 }
 
