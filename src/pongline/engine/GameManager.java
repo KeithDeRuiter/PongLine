@@ -31,9 +31,9 @@ public class GameManager {
     
     private final GameDisplay display;
     
-    private final float WORLD_WIDTH = 400;
+    public static final float WORLD_WIDTH = 400;
     
-    private final float WORLD_HEIGHT = 300;
+    public static final float WORLD_HEIGHT = 300;
     
     private final Random rand;
     
