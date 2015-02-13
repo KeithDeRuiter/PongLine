@@ -5,10 +5,10 @@
  */
 package pongline.display;
 
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -21,6 +21,8 @@ import pongline.data.EntityType;
 import pongline.data.GameState;
 import pongline.data.Paddle;
 import pongline.data.matlib.Vector2f;
+import pongline.input.InputManager;
+import pongline.input.KeyboardInputManager;
 
 /**
  * Default implementation of the GameDisplay interface. Creates the PongCanvas
@@ -35,10 +37,14 @@ public class DefaultGameDisplay implements GameDisplay {
     /** The manager of assets. Maintains of mapping of assets to their images or sounds. */
     private AssetManager m_assMan;
     
-    /** Creates and initializes a new instance of DefaultGameDisplay. */
-    public DefaultGameDisplay() {
+    /** 
+     * Creates and initializes a new instance of DefaultGameDisplay. 
+     * @param keyListener Listener to notify of key events
+     */
+    public DefaultGameDisplay(KeyListener keyListener) {
         m_assMan = new AssetManager();
         m_pongCanvas = new PongCanvas();
+        m_pongCanvas.addKeyListener(keyListener);
     }
 
     /**
@@ -49,6 +55,7 @@ public class DefaultGameDisplay implements GameDisplay {
     @Override
     public void setState(GameState state) {
         List<Renderable> renderables = new ArrayList<>();
+        //400 wide by 300 tall game world according to keith
         for (Entity entity : state.getEntities()) {
             renderables.add(new Renderable(entity,
                     m_assMan.getImage(EntityType.getAssetForEntityType(entity.getType()))));
@@ -88,11 +95,16 @@ public class DefaultGameDisplay implements GameDisplay {
     }
     
     public static void main(String[] args) {
-        DefaultGameDisplay dfg = new DefaultGameDisplay();
+        DefaultGameDisplay dfg = new DefaultGameDisplay(new KeyboardInputManager());
         List<Entity> gameStates = new ArrayList<>();
-        gameStates.add(new Ball(new Vector2f(0, 0), new Vector2f(0, 10)));
-        gameStates.add(new Paddle(new Vector2f(100, 100), new Vector2f(100, 200)));
-        dfg.setState(new GameState(gameStates));
+        gameStates.add(new Ball(new Vector2f(100, 100), new Vector2f(0, 0)));
+        InputManager inputManager = new KeyboardInputManager();
+        
+        int p1y = 200;
+        int p2y = 200;
+        gameStates.add(new Paddle(new Vector2f(0, p1y), new Vector2f(0, 0)));
+        gameStates.add(new Paddle(new Vector2f(600, p2y), new Vector2f(0, 0)));
+        dfg.setState(new GameState(gameStates, null));
     }
     
 }

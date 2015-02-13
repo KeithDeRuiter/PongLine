@@ -14,7 +14,14 @@ import javax.swing.JFrame;
  * @author LoTB
  */
 public class PongCanvas extends JComponent {
-    List<Renderable> m_renderables;
+    /** List of renderables that can draw themselves. */
+    private List<Renderable> m_renderables;
+    
+    /** The width of the drawable canvas area. */
+    public static final int CANVAS_WIDTH = 640;
+    
+    /** The height of the drawable canvas area. */
+    public static final int CANVAS_HEIGHT = 480;
     
     /** Creates a new instance of PongCanvas. */
     public PongCanvas() {
@@ -26,8 +33,9 @@ public class PongCanvas extends JComponent {
         JFrame frame = new JFrame();
         frame.setLayout(new BorderLayout());
         frame.add(this, BorderLayout.CENTER);
-        this.setPreferredSize(new Dimension(640, 480));
+        this.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
         this.setBackground(Color.BLACK);
+        frame.setResizable(false);
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
@@ -39,7 +47,7 @@ public class PongCanvas extends JComponent {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D)g;
         g2d.setColor(Color.BLACK);
-        g2d.fillRect(0, 0, this.getWidth(), this.getHeight());
+        g2d.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         for (Renderable renderable : m_renderables) {
             renderable.draw(g2d);
         }

@@ -32,8 +32,8 @@ public class AssetManager {
         m_imageAssetMap = new HashMap<>();
         m_soundAssetMap = new HashMap<>();
         try {
-            m_imageAssetMap.put(Asset.BALL, ImageIO.read(new File("assets/pong_paddle.png")));
-            m_imageAssetMap.put(Asset.PADDLE, ImageIO.read(new File("assets/pong_paddle.png")));
+            m_imageAssetMap.put(Asset.BALL, ImageIO.read(new File("res/ball.png")));
+            m_imageAssetMap.put(Asset.PADDLE, ImageIO.read(new File("res/paddle.png")));
         } catch (IOException ex) {
             Logger.getLogger(PongCanvas.class.getName()).log(Level.SEVERE, null, ex);
         }
