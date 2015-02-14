@@ -1,7 +1,7 @@
 package pongline.data.matlib;
 
 public final class Vector3f {
-    public final float x, y, z;
+    public float x, y, z;
 
     public Vector3f() {
         this.x = this.y = this.z = 0.0f;

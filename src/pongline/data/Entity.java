@@ -6,8 +6,8 @@
 
 package pongline.data;
 
+import java.awt.geom.Rectangle2D;
 import pongline.data.matlib.Vector2f;
-
 
 
 /**
@@ -57,6 +57,14 @@ public abstract class Entity {
     public void setPosition(Vector2f position) {
         this.position = position;
     }
+    
+    public void setXPosition(float x) {
+        position.x = x;
+    }
+    
+    public void setYPosition(float y) {
+        position.y = y;
+    }
 
     public Vector2f getVelocity() {
         return velocity;
@@ -94,11 +102,20 @@ public abstract class Entity {
         this.position.add(delta);
     }
     
+    public Rectangle2D getBoundingBox() {
+        return new Rectangle2D.Float(position.x, position.y, width, height);
+    }
+    
+    public boolean intersects(Entity e) {
+        return getBoundingBox().intersects(e.getBoundingBox());
+    }
+    
     /**
      * Updates the state of this method.
      * @param dt The time since last update, in milliseconds.
      */
     public void update(long dt) {
+        
         Vector2f delta = velocity.multiply((float)dt / 1000.0f);
         translate(delta);
     }

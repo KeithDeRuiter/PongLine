@@ -1,7 +1,7 @@
 package pongline.data.matlib;
 
 public final class Vector2f {
-    public final float x, y;
+    public float x, y;
     
     public Vector2f() {
 	this.x = this.y = 0.0f;
