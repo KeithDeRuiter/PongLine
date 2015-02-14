@@ -3,6 +3,7 @@ package pongline.display;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import pongline.data.Entity;
+import pongline.engine.GameManager;
 
 /**
  * Contains an entity, the image, and a method to draw the renderable.
@@ -31,8 +32,10 @@ public class Renderable {
      * @param graphics The graphics to draw this renderable on.
      */
     public void draw(Graphics2D graphics) {
-        graphics.drawImage(m_image, (int)(m_entity.getPosition().x), 
-                (int)(m_entity.getPosition().y), null);
+        graphics.drawImage(m_image, 
+                (int)(m_entity.getPosition().x / GameManager.WORLD_WIDTH * PongCanvas.CANVAS_WIDTH), 
+                (int)(m_entity.getPosition().y / GameManager.WORLD_HEIGHT * PongCanvas.CANVAS_HEIGHT), 
+                null);
     }
     
     
