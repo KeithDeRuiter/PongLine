@@ -77,9 +77,10 @@ public class GameManager {
         
         //Trigger updates for every entity
         for(Entity e : entities) {
+            Vector2f originalPosition = e.getPosition();
             e.update(dt);
+            checkForCollisions(e, originalPosition, events, dt);
         }
-        checkForCollision(events);
         
         //Logic
         
@@ -105,36 +106,46 @@ public class GameManager {
         return new Paddle(pos, vel);
     }
     
-    private void checkForCollision(List<GameEvent> events) {
-        for(Entity e : entities) {
-            Vector2f pos = e.getPosition();
-            Vector2f vel = e.getVelocity();
-            float width = e.getWidth();
-            float height = e.getHeight();
-            
-            if(e.getType() == EntityType.BALL) {
-                if(pos.x < 0 || pos.x + width > WORLD_WIDTH) {
+    /**
+     * Checks for collisions between the given entity and the other entities in the world.
+     * Flips the x velocity and moves the entity back to the given original position if a collision occurred.
+     * @param e The entity we are checking for collisions on.
+     * @param originalPosition The original position to move the entity back to if a collision occurred.
+     * @param events List of events to add a collision event to if applicable.
+     * @param dt The delta time in milliseconds.
+     */
+    private void checkForCollisions(Entity e, Vector2f originalPosition, List<GameEvent> events, long dt) {  
+        Vector2f pos = e.getPosition();
+        Vector2f vel = e.getVelocity();
+        float width = e.getWidth();
+        float height = e.getHeight();
+
+        if(e.getType() == EntityType.BALL) {
+            if(pos.x < 0 || pos.x + width > WORLD_WIDTH) {
+                e.setVelocity(new Vector2f(-vel.x, vel.y));
+                e.setPosition(originalPosition);
+                events.add(GameEvent.WALL_HIT);
+            }
+            if(pos.y < 0 || pos.y + height > WORLD_HEIGHT) {
+                e.setVelocity(new Vector2f(vel.x, -vel.y));
+                e.setPosition(originalPosition);
+                events.add(GameEvent.WALL_HIT);
+            }
+            //Check for paddle collisions with ball
+            for(Entity other : entities) {
+                if(e.intersects(other) && other.getType() == EntityType.PADDLE) {
                     e.setVelocity(new Vector2f(-vel.x, vel.y));
-                    events.add(GameEvent.WALL_HIT);
+                    e.setPosition(originalPosition);
+                    events.add(GameEvent.PADDLE_HIT);
                 }
-                if(pos.y < 0 || pos.y + height > WORLD_HEIGHT) {
-                    e.setVelocity(new Vector2f(vel.x, -vel.y));
-                    events.add(GameEvent.WALL_HIT);
-                }
-                //Check for paddle collisions with ball
-                for(Entity other : entities) {
-                    if(e.intersects(other) && other.getType() == EntityType.PADDLE) {
-                        e.setVelocity(new Vector2f(-vel.x, vel.y));
-                        events.add(GameEvent.PADDLE_HIT);
-                    }
-                }
-            } else if(e.getType() == EntityType.PADDLE) {
-                if(pos.y < 0) {
-                    e.setYPosition(0.0f);
-                } else if(pos.y + height > WORLD_HEIGHT) {
-                    e.setYPosition(WORLD_HEIGHT - height);
-                }
+            }
+        } else if(e.getType() == EntityType.PADDLE) {
+            if(pos.y < 0) {
+                e.setYPosition(0.0f);
+            } else if(pos.y + height > WORLD_HEIGHT) {
+                e.setYPosition(WORLD_HEIGHT - height);
             }
         }
     }
+    
 }
