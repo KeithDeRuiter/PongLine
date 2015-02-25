@@ -17,6 +17,7 @@ import pongline.data.Entity;
 import pongline.data.EntityType;
 import pongline.data.GameEvent;
 import pongline.data.GameState;
+import pongline.data.Paddle;
 import pongline.data.matlib.Vector2f;
 import pongline.display.GameDisplay;
 
@@ -50,6 +51,8 @@ public class GameManager {
     
     public void launch() {
         entities.add(createRandomBall());
+        entities.add(createPaddleOne());
+        entities.add(createPaddleTwo());
         executor.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -57,7 +60,7 @@ public class GameManager {
                 update(currentTime - previousUpdateTime);
                 previousUpdateTime = currentTime;
             }
-        }, 0, 100, TimeUnit.MILLISECONDS);
+        }, 0, 10, TimeUnit.MILLISECONDS);
     }
     
     /**
@@ -70,11 +73,13 @@ public class GameManager {
         
         //Input
         
+        
         //Trigger updates for every entity
         for(Entity e : entities) {
+            Vector2f originalPosition = e.getPosition();
             e.update(dt);
+            checkForCollisions(e, originalPosition, events, dt);
         }
-        checkForCollision(events);
         
         //Logic
         
@@ -84,33 +89,76 @@ public class GameManager {
     
     private Entity createRandomBall() {
         Vector2f pos = new Vector2f(rand.nextFloat() * WORLD_WIDTH, rand.nextFloat() * WORLD_HEIGHT);
-        Vector2f vel = new Vector2f(rand.nextFloat(), rand.nextFloat());
+        Vector2f vel = new Vector2f(50.0f + (rand.nextFloat() * 100.0f), 50.0f + (rand.nextFloat() * 100.0f));
         return new Ball(pos, vel);
     }
     
-    private void checkForCollision(List<GameEvent> events) {
-        for(Entity e : entities) {
-            Vector2f pos = e.getPosition();
-            Vector2f vel = e.getVelocity();
-            float width = e.getWidth();
-            float height = e.getHeight();
-            
-            if(e.getType() == EntityType.BALL) {
-                if(pos.x < 0 || pos.x + width > WORLD_WIDTH) {
-                    e.setVelocity(new Vector2f(-vel.x, vel.y));
-                    events.add(GameEvent.WALL_HIT);
+    private Entity createPaddleOne() {
+        Vector2f pos = new Vector2f((WORLD_WIDTH * 0.1f) - Paddle.DEFAULT_WIDTH, WORLD_HEIGHT * 0.5f);
+        Vector2f vel = new Vector2f(0.0f, 0.0f);
+        return new Paddle(pos, vel);
+    }
+    
+    private Entity createPaddleTwo() {
+        Vector2f pos = new Vector2f((WORLD_WIDTH * 0.9f) - Paddle.DEFAULT_WIDTH, WORLD_HEIGHT * 0.5f);
+        Vector2f vel = new Vector2f(0.0f, 0.0f);
+        return new Paddle(pos, vel);
+    }
+    
+    /**
+     * Checks for collisions between the given entity and the other entities in the world.
+     * Flips the x velocity and moves the entity back to the given original position if a collision occurred.
+     * @param e The entity we are checking for collisions on.
+     * @param originalPosition The original position to move the entity back to if a collision occurred.
+     * @param events List of events to add a collision event to if applicable.
+     * @param dt The delta time in milliseconds.
+     */
+    private void checkForCollisions(Entity e, Vector2f originalPosition, List<GameEvent> events, long dt) {  
+        Vector2f pos = e.getPosition();
+        Vector2f vel = e.getVelocity();
+        float width = e.getWidth();
+        float height = e.getHeight();
+
+        if(e.getType() == EntityType.BALL) {
+            if(pos.x < 0 || pos.x + width > WORLD_WIDTH) {
+                e.setVelocity(new Vector2f(-vel.x, vel.y));
+                e.setPosition(originalPosition);
+                events.add(GameEvent.WALL_HIT);
+            }
+            if(pos.y < 0 || pos.y + height > WORLD_HEIGHT) {
+                e.setVelocity(new Vector2f(vel.x, -vel.y));
+                e.setPosition(originalPosition);
+                events.add(GameEvent.WALL_HIT);
+            }
+            //Check for paddle collisions with ball
+            for(Entity other : entities) {
+                if(e.intersects(other) && other.getType() == EntityType.PADDLE) {
+                    //There was a collision, move back and bounce according to what direction you collided
+                    e.setPosition(originalPosition);
+                    if(e.getPosition().y + height <= other.getPosition().y) {
+                        //TOP
+                        e.setVelocity(new Vector2f(vel.x, -vel.y));
+                    } else if(e.getPosition().y >= other.getPosition().y + other.getHeight()) {
+                        //BOTTOM
+                        e.setVelocity(new Vector2f(vel.x, -vel.y));
+                    } else if(e.getPosition().x + width <= other.getPosition().x) {
+                        //LEFT
+                        e.setVelocity(new Vector2f(-vel.x, vel.y));
+                    } else if(e.getPosition().x >= other.getPosition().x + other.getWidth()) {
+                        //RIGHT
+                        e.setVelocity(new Vector2f(-vel.x, vel.y));
+                    }
+                    
+                    events.add(GameEvent.PADDLE_HIT);
                 }
-                if(pos.y < 0 || pos.y + height > WORLD_HEIGHT) {
-                    e.setVelocity(new Vector2f(vel.x, -vel.y));
-                    events.add(GameEvent.WALL_HIT);
-                }
-            } else if(e.getType() == EntityType.PADDLE) {
-                if(pos.y < 0) {
-                    e.setYPosition(0.0f);
-                } else if(pos.y + height > WORLD_HEIGHT) {
-                    e.setYPosition(WORLD_HEIGHT - height);
-                }
+            }
+        } else if(e.getType() == EntityType.PADDLE) {
+            if(pos.y < 0) {
+                e.setYPosition(0.0f);
+            } else if(pos.y + height > WORLD_HEIGHT) {
+                e.setYPosition(WORLD_HEIGHT - height);
             }
         }
     }
+    
 }

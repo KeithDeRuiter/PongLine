@@ -14,12 +14,15 @@ import pongline.data.matlib.Vector2f;
  */
 public class Ball extends Entity {
 
+    public static final float DEFAULT_WIDTH = 20;
+    public static final float DEFAULT_HEIGHT = 20;
+    
     /**
      * Constructs a new Ball.
      * @param pos the position
      * @param vel the Velocity
      */
     public Ball(Vector2f pos, Vector2f vel) {
-        super(pos, vel, 20, 20, EntityType.BALL);
+        super(pos, vel, DEFAULT_WIDTH, DEFAULT_HEIGHT, EntityType.BALL);
     }
 }
