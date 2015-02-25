@@ -134,8 +134,22 @@ public class GameManager {
             //Check for paddle collisions with ball
             for(Entity other : entities) {
                 if(e.intersects(other) && other.getType() == EntityType.PADDLE) {
-                    e.setVelocity(new Vector2f(-vel.x, vel.y));
+                    //There was a collision, move back and bounce according to what direction you collided
                     e.setPosition(originalPosition);
+                    if(pos.y + height < other.getPosition().y) {
+                        //TOP
+                        e.setVelocity(new Vector2f(vel.x, -vel.y));
+                    } else if(pos.y > other.getPosition().y + other.getHeight()) {
+                        //BOTTOM
+                        e.setVelocity(new Vector2f(vel.x, -vel.y));
+                    } else if(pos.x + width < other.getPosition().x) {
+                        //LEFT
+                        e.setVelocity(new Vector2f(-vel.x, vel.y));
+                    } else if(pos.x > other.getPosition().x + other.getWidth()) {
+                        //RIGHT
+                        e.setVelocity(new Vector2f(-vel.x, vel.y));
+                    }
+                    
                     events.add(GameEvent.PADDLE_HIT);
                 }
             }
