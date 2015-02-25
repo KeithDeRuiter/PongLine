@@ -84,7 +84,7 @@ public class GameManager {
     
     private Entity createRandomBall() {
         Vector2f pos = new Vector2f(rand.nextFloat() * WORLD_WIDTH, rand.nextFloat() * WORLD_HEIGHT);
-        Vector2f vel = new Vector2f(rand.nextFloat(), rand.nextFloat());
+        Vector2f vel = new Vector2f(rand.nextFloat() * 3.0f, rand.nextFloat() * 3.0f);
         return new Ball(pos, vel);
     }
     
