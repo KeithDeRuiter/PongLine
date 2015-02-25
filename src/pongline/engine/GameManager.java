@@ -17,6 +17,7 @@ import pongline.data.Entity;
 import pongline.data.EntityType;
 import pongline.data.GameEvent;
 import pongline.data.GameState;
+import pongline.data.Paddle;
 import pongline.data.matlib.Vector2f;
 import pongline.display.GameDisplay;
 
@@ -50,6 +51,8 @@ public class GameManager {
     
     public void launch() {
         entities.add(createRandomBall());
+        entities.add(createPaddleOne());
+        entities.add(createPaddleTwo());
         executor.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
@@ -57,7 +60,7 @@ public class GameManager {
                 update(currentTime - previousUpdateTime);
                 previousUpdateTime = currentTime;
             }
-        }, 0, 100, TimeUnit.MILLISECONDS);
+        }, 0, 10, TimeUnit.MILLISECONDS);
     }
     
     /**
@@ -88,6 +91,18 @@ public class GameManager {
         return new Ball(pos, vel);
     }
     
+    private Entity createPaddleOne() {
+        Vector2f pos = new Vector2f((WORLD_WIDTH * 0.1f) - Paddle.DEFAULT_WIDTH, WORLD_HEIGHT * 0.5f);
+        Vector2f vel = new Vector2f(0.0f, 0.0f);
+        return new Paddle(pos, vel);
+    }
+    
+    private Entity createPaddleTwo() {
+        Vector2f pos = new Vector2f((WORLD_WIDTH * 0.9f) - Paddle.DEFAULT_WIDTH, WORLD_HEIGHT * 0.5f);
+        Vector2f vel = new Vector2f(0.0f, 0.0f);
+        return new Paddle(pos, vel);
+    }
+    
     private void checkForCollision(List<GameEvent> events) {
         for(Entity e : entities) {
             Vector2f pos = e.getPosition();
@@ -103,6 +118,13 @@ public class GameManager {
                 if(pos.y < 0 || pos.y + height > WORLD_HEIGHT) {
                     e.setVelocity(new Vector2f(vel.x, -vel.y));
                     events.add(GameEvent.WALL_HIT);
+                }
+                //Check for paddle collisions with ball
+                for(Entity other : entities) {
+                    if(e.intersects(other) && other.getType() == EntityType.PADDLE) {
+                        e.setVelocity(new Vector2f(-vel.x, vel.y));
+                        events.add(GameEvent.PADDLE_HIT);
+                    }
                 }
             } else if(e.getType() == EntityType.PADDLE) {
                 if(pos.y < 0) {
