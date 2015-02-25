@@ -7,7 +7,6 @@
 package pongline.data;
 
 import pongline.data.matlib.Vector2f;
-import pongline.display.Asset;
 
 /**
  *
@@ -15,13 +14,16 @@ import pongline.display.Asset;
  */
 public class Paddle extends Entity {
 
+    public static final float DEFAULT_WIDTH = 10;
+    public static final float DEFAULT_HEIGHT = 60;
+    
     /**
      * Constructs a new paddle.
      * @param pos the position
      * @param vel the velocity
      */
     public Paddle(Vector2f pos, Vector2f vel) {
-        super(pos, vel, 10, 60, EntityType.PADDLE);
+        super(pos, vel, DEFAULT_WIDTH, DEFAULT_HEIGHT, EntityType.PADDLE);
     }
     
 }
