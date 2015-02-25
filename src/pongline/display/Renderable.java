@@ -37,21 +37,17 @@ public class Renderable {
      * @param graphics The graphics to draw this renderable on.
      */
     public void draw(Graphics2D graphics) {
-//        m_image.
         graphics.drawImage(m_image, 
                 (int)(m_entity.getPosition().x / GameManager.WORLD_WIDTH * PongCanvas.CANVAS_WIDTH), 
                 (int)(m_entity.getPosition().y / GameManager.WORLD_HEIGHT * PongCanvas.CANVAS_HEIGHT), 
                 null);
         
         graphics.setColor(Color.RED);
-        graphics.drawRect((int) (m_entity.getPosition().x * WIDTH_SCALE),
-                (int) (m_entity.getPosition().y * HEIGHT_SCALE),
-                 m_image.getWidth(),
-                 m_image.getHeight());
-//        graphics.drawRect((int)(m_entity.getPosition().x * WIDTH_SCALE), 
-//                (int)(m_entity.getPosition().y * HEIGHT_SCALE), 
-//                (int)(m_entity.getWidth() * WIDTH_SCALE), 
-//                (int)(m_entity.getHeight() * HEIGHT_SCALE));
+
+        graphics.drawRect((int)(m_entity.getPosition().x * WIDTH_SCALE), 
+                (int)(m_entity.getPosition().y * HEIGHT_SCALE), 
+                (int)(m_entity.getWidth() * WIDTH_SCALE), 
+                (int)(m_entity.getHeight() * HEIGHT_SCALE));
     }
     
     

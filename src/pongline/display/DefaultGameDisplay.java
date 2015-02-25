@@ -52,7 +52,6 @@ public class DefaultGameDisplay implements GameDisplay {
     @Override
     public void setState(GameState state) {
         List<Renderable> renderables = new ArrayList<>();
-        //400 wide by 300 tall game world according to keith
         for (Entity entity : state.getEntities()) {
             renderables.add(new Renderable(entity,
                     m_assMan.getImage(EntityType.getAssetForEntityType(entity.getType()))));
@@ -94,16 +93,6 @@ public class DefaultGameDisplay implements GameDisplay {
     public static void main(String[] args) {
         DefaultGameDisplay dfg = new DefaultGameDisplay(new KeyboardInputManager());
         GameManager manager = new GameManager(dfg);
-        
-//        List<Entity> gameStates = new ArrayList<>();
-//        gameStates.add(new Ball(new Vector2f(100, 100), new Vector2f(0, 0)));
-//        InputManager inputManager = new KeyboardInputManager();
-//        
-//        int p1y = 200;
-//        int p2y = 200;
-//        gameStates.add(new Paddle(new Vector2f(0, p1y), new Vector2f(0, 0)));
-//        gameStates.add(new Paddle(new Vector2f(600, p2y), new Vector2f(0, 0)));
-//        dfg.setState(new GameState(gameStates, null));
         manager.launch();
     }
     
