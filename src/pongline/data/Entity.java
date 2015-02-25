@@ -99,7 +99,7 @@ public abstract class Entity {
     }
     
     public void translate(Vector2f delta) {
-        this.position.add(delta);
+        position = position.add(delta);
     }
     
     public Rectangle2D getBoundingBox() {
