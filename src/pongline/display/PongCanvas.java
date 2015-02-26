@@ -5,6 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -25,6 +28,7 @@ public class PongCanvas extends JComponent {
     
     /** Creates a new instance of PongCanvas. */
     public PongCanvas() {
+        m_renderables = new ArrayList<>();
         initComponents();
     }
     
@@ -51,7 +55,13 @@ public class PongCanvas extends JComponent {
         for (Renderable renderable : m_renderables) {
             renderable.draw(g2d);
         }
-        
+//        g2d.setColor(Color.GREEN.darker().darker());
+//        for (int i = 0; i < CANVAS_WIDTH; i+=20) {
+//            g2d.drawLine(i, 0, i, CANVAS_HEIGHT);
+//        }
+//        for (int i = 0; i < CANVAS_HEIGHT; i+=20) {
+//            g2d.drawLine(0, i, CANVAS_WIDTH, i);
+//        }
     }
     
     /** 
