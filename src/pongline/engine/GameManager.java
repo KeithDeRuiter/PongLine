@@ -7,6 +7,7 @@
 package pongline.engine;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -20,6 +21,9 @@ import pongline.data.GameState;
 import pongline.data.Paddle;
 import pongline.data.matlib.Vector2f;
 import pongline.display.GameDisplay;
+import pongline.input.InputControl;
+import pongline.input.InputManager;
+import pongline.input.InputState;
 
 /**
  *
@@ -35,18 +39,29 @@ public class GameManager {
     
     private final GameDisplay display;
     
+    private final InputManager inputManager;
+    
+    Paddle playerOnePaddle;
+    
+    private int playerOneScore;
+    
+    private int playerTwoScore;
+    
     public static final float WORLD_WIDTH = 400;
     
     public static final float WORLD_HEIGHT = 300;
     
     private final Random rand;
     
-    public GameManager(GameDisplay display) {
+    public GameManager(GameDisplay display, InputManager inputManager) {
         rand = new Random();
         executor = Executors.newSingleThreadScheduledExecutor();
         previousUpdateTime = System.currentTimeMillis();
         this.display = display;
+        this.inputManager = inputManager;
         entities = new ArrayList<>();
+        playerOneScore = 0;
+        playerTwoScore = 0;
     }
     
     
@@ -73,19 +88,42 @@ public class GameManager {
         List<GameEvent> events = new ArrayList<>();
         
         //Input
+        InputState inputState = inputManager.getInputState();
         
+        boolean paddleUp = inputState.getControlState(InputControl.PADDLE_UP);
+        boolean paddleDown = inputState.getControlState(InputControl.PADDLE_DOWN);
+        
+        Vector2f playerOnePaddleVelocity = new Vector2f(0.0f, 0.0f);
+        if(paddleUp) {
+            playerOnePaddleVelocity.add(new Vector2f(0.0f, 10.0f));
+        }
+        if(paddleDown) {
+            playerOnePaddleVelocity.add(new Vector2f(0.0f, -10.0f));
+        }
+        playerOnePaddle.setVelocity(playerOnePaddleVelocity);
+        
+        Collection<Entity> entitiesToRemove = new ArrayList<>();
         
         //Trigger updates for every entity
         for(Entity e : entities) {
             Vector2f originalPosition = e.getPosition();
             e.update(dt);
-            checkForCollisions(e, originalPosition, events, dt);
+            checkForCollisions(e, originalPosition, events, entitiesToRemove, dt);
         }
+        entities.removeAll(entitiesToRemove);
         
         //Logic
+        if(events.contains(GameEvent.PLAYER_ONE_POINT_SCORED)) {
+            playerOneScore++;
+            entities.add(createRandomBall());
+        }
+        else if(events.contains(GameEvent.PLAYER_TWO_POINT_SCORED)) {
+            playerTwoScore++;
+            entities.add(createRandomBall());
+        }
         
         //Display
-        display.setState(new GameState(entities, events));
+        display.setState(new GameState(entities, events, playerOneScore, playerTwoScore));
     }
     
     private Entity createRandomBall() {
@@ -112,19 +150,24 @@ public class GameManager {
      * @param e The entity we are checking for collisions on.
      * @param originalPosition The original position to move the entity back to if a collision occurred.
      * @param events List of events to add a collision event to if applicable.
+     * @param entitiesToRemove List where entities slated for removel can be added.
      * @param dt The delta time in milliseconds.
      */
-    private void checkForCollisions(Entity e, Vector2f originalPosition, List<GameEvent> events, long dt) {  
+    private void checkForCollisions(Entity e, Vector2f originalPosition, List<GameEvent> events,
+                                    Collection<Entity> entitiesToRemove, long dt) {  
         Vector2f pos = e.getPosition();
         Vector2f vel = e.getVelocity();
         float width = e.getWidth();
         float height = e.getHeight();
 
         if(e.getType() == EntityType.BALL) {
-            if(pos.x < 0 || pos.x + width > WORLD_WIDTH) {
-                e.setVelocity(new Vector2f(-vel.x, vel.y));
-                e.setPosition(originalPosition);
-                events.add(GameEvent.WALL_HIT);
+            if(pos.x < 0) {
+                entitiesToRemove.add(e);
+                events.add(GameEvent.PLAYER_TWO_POINT_SCORED);
+            }
+            if(pos.x + width > WORLD_WIDTH) {
+                entitiesToRemove.add(e);
+                events.add(GameEvent.PLAYER_ONE_POINT_SCORED);
             }
             if(pos.y < 0 || pos.y + height > WORLD_HEIGHT) {
                 e.setVelocity(new Vector2f(vel.x, -vel.y));
