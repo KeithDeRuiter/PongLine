@@ -19,6 +19,7 @@ import pongline.data.Entity;
 import pongline.data.EntityType;
 import pongline.data.GameState;
 import pongline.engine.GameManager;
+import pongline.input.InputManager;
 import pongline.input.KeyboardInputManager;
 
 /**
@@ -91,8 +92,9 @@ public class DefaultGameDisplay implements GameDisplay {
     }
 
     public static void main(String[] args) {
-        DefaultGameDisplay dfg = new DefaultGameDisplay(new KeyboardInputManager());
-        GameManager manager = new GameManager(dfg);
+        InputManager input = new KeyboardInputManager();
+        DefaultGameDisplay dfg = new DefaultGameDisplay(input);
+        GameManager manager = new GameManager(dfg, input);
         manager.launch();
     }
 

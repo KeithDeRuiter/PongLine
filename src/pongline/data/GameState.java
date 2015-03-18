@@ -23,9 +23,15 @@ public class GameState {
      */
     private final List<GameEvent> events;
     
-    public GameState(List<Entity> entities, List<GameEvent> events) {
+    private final int playerOneScore;
+    
+    private final int playerTwoScore;
+    
+    public GameState(List<Entity> entities, List<GameEvent> events, int playerOneScore, int playerTwoScore) {
         this.entities = entities;
         this.events = events;
+        this.playerOneScore = playerOneScore;
+        this.playerTwoScore = playerTwoScore;
     }
     
     public List<Entity> getEntities() {
@@ -34,6 +40,14 @@ public class GameState {
     
     public List<GameEvent> getEvents() {
         return events;
+    }
+    
+    public int getPlayerOneScore() {
+        return playerOneScore;
+    }
+    
+    public int getPlayerTwoScore() {
+        return playerTwoScore;
     }
     
 }
