@@ -46,6 +46,7 @@ public class GameManager {
         executor = Executors.newSingleThreadScheduledExecutor();
         previousUpdateTime = System.currentTimeMillis();
         this.display = display;
+        entities = new ArrayList<>();
     }
     
     
