@@ -21,6 +21,7 @@ import pongline.data.GameState;
 import pongline.engine.GameManager;
 import pongline.input.InputManager;
 import pongline.input.KeyboardInputManager;
+import pongline.network.CommunicationEngine;
 
 /**
  * Default implementation of the GameDisplay interface. Creates the PongCanvas
@@ -41,7 +42,7 @@ public class DefaultGameDisplay implements GameDisplay {
      */
     public DefaultGameDisplay(KeyListener keyListener) {
         m_assMan = new AssetManager();
-        m_pongCanvas = new PongCanvas();
+        m_pongCanvas = new PongCanvas(keyListener);
         m_pongCanvas.addKeyListener(keyListener);
     }
 
@@ -94,7 +95,8 @@ public class DefaultGameDisplay implements GameDisplay {
     public static void main(String[] args) {
         InputManager input = new KeyboardInputManager();
         DefaultGameDisplay dfg = new DefaultGameDisplay(input);
-        GameManager manager = new GameManager(dfg, input);
+        CommunicationEngine comms = null;
+        GameManager manager = new GameManager(dfg, input, comms);
         manager.launch();
     }
     

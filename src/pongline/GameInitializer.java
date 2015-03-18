@@ -7,6 +7,7 @@ import pongline.display.SetupListener;
 import pongline.engine.GameManager;
 import pongline.input.InputManager;
 import pongline.input.KeyboardInputManager;
+import pongline.network.CommunicationEngine;
 
 /**
  * A class that manages the initialization of the game.
@@ -20,6 +21,9 @@ public class GameInitializer implements SetupListener {
     /** An input manager. */
     private final InputManager m_inputManager;
 
+    /** A communication engine. */
+    private final CommunicationEngine m_communicationEngine;
+
     /** A GameManager for processing the game state. */
     private final GameManager m_manager;
 
@@ -32,9 +36,10 @@ public class GameInitializer implements SetupListener {
         m_setupDisplay.addListener(this);
 
         m_inputManager = new KeyboardInputManager();
+        m_communicationEngine = null;
         m_display = new DefaultGameDisplay(m_inputManager);
-        // BUILD COMM ENGINE HERE
-        m_manager = new GameManager(m_display, m_inputManager);
+        
+        m_manager = new GameManager(m_display, m_inputManager, m_communicationEngine);
     }
 
     /** Starts the client, and launches the configuration window. */

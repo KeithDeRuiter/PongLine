@@ -5,8 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComponent;
@@ -27,14 +26,15 @@ public class PongCanvas extends JComponent {
     public static final int CANVAS_HEIGHT = 480;
     
     /** Creates a new instance of PongCanvas. */
-    public PongCanvas() {
+    public PongCanvas(KeyListener keyListener) {
         m_renderables = new ArrayList<>();
-        initComponents();
+        initComponents(keyListener);
     }
     
     /** Initializes the components of the display. */
-    private void initComponents() {
+    private void initComponents(KeyListener keyListener) {
         JFrame frame = new JFrame();
+        frame.addKeyListener(keyListener);
         frame.setLayout(new BorderLayout());
         frame.add(this, BorderLayout.CENTER);
         this.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));

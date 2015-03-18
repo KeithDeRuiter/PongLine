@@ -25,4 +25,10 @@ public class Ball extends Entity {
     public Ball(Vector2f pos, Vector2f vel) {
         super(pos, vel, DEFAULT_WIDTH, DEFAULT_HEIGHT, EntityType.BALL);
     }
+
+    @Override
+    public String toString() {
+        return "BALL pos <" + this.position + ">   vel <" + this.velocity + ">";
+    }
+    
 }

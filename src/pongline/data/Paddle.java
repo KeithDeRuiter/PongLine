@@ -26,4 +26,9 @@ public class Paddle extends Entity {
         super(pos, vel, DEFAULT_WIDTH, DEFAULT_HEIGHT, EntityType.PADDLE);
     }
     
+    @Override
+    public String toString() {
+        return "PADDLE pos <" + this.position + ">   vel <" + this.velocity + ">";
+    }
+    
 }

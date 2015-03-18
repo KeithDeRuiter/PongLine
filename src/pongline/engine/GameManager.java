@@ -24,6 +24,7 @@ import pongline.display.GameDisplay;
 import pongline.input.InputControl;
 import pongline.input.InputManager;
 import pongline.input.InputState;
+import pongline.network.CommunicationEngine;
 
 /**
  *
@@ -41,6 +42,8 @@ public class GameManager {
     
     private final InputManager inputManager;
     
+    private final CommunicationEngine communicationEngine;
+    
     Paddle playerOnePaddle;
     
     private int playerOneScore;
@@ -53,21 +56,23 @@ public class GameManager {
     
     private final Random rand;
     
-    public GameManager(GameDisplay display, InputManager inputManager) {
+    public GameManager(GameDisplay display, InputManager inputManager, CommunicationEngine communicationEngine) {
         rand = new Random();
         executor = Executors.newSingleThreadScheduledExecutor();
         previousUpdateTime = System.currentTimeMillis();
         this.display = display;
         this.inputManager = inputManager;
+        this.communicationEngine = communicationEngine;
         entities = new ArrayList<>();
         playerOneScore = 0;
         playerTwoScore = 0;
     }
     
-    
     public void launch() {
+        System.out.println("Launching Game Manager...");
         entities.add(createRandomBall());
-        entities.add(createPaddleOne());
+        playerOnePaddle = createPaddleOne();
+        entities.add(playerOnePaddle);
         entities.add(createPaddleTwo());
         executor.scheduleAtFixedRate(new Runnable() {
             @Override
@@ -95,10 +100,10 @@ public class GameManager {
         
         Vector2f playerOnePaddleVelocity = new Vector2f(0.0f, 0.0f);
         if(paddleUp) {
-            playerOnePaddleVelocity.add(new Vector2f(0.0f, 10.0f));
+            playerOnePaddleVelocity = playerOnePaddleVelocity.add(new Vector2f(0.0f, 100.0f));
         }
         if(paddleDown) {
-            playerOnePaddleVelocity.add(new Vector2f(0.0f, -10.0f));
+            playerOnePaddleVelocity = playerOnePaddleVelocity.add(new Vector2f(0.0f, -100.0f));
         }
         playerOnePaddle.setVelocity(playerOnePaddleVelocity);
         
@@ -116,29 +121,31 @@ public class GameManager {
         if(events.contains(GameEvent.PLAYER_ONE_POINT_SCORED)) {
             playerOneScore++;
             entities.add(createRandomBall());
+            System.out.println("PLAYER ONE SCORED!  " + playerOneScore + "-" + playerTwoScore);
         }
         else if(events.contains(GameEvent.PLAYER_TWO_POINT_SCORED)) {
             playerTwoScore++;
             entities.add(createRandomBall());
+            System.out.println("PLAYER TWO SCORED!  " + playerOneScore + "-" + playerTwoScore);
         }
         
         //Display
         display.setState(new GameState(entities, events, playerOneScore, playerTwoScore));
     }
     
-    private Entity createRandomBall() {
+    private Ball createRandomBall() {
         Vector2f pos = new Vector2f(rand.nextFloat() * WORLD_WIDTH, rand.nextFloat() * WORLD_HEIGHT);
         Vector2f vel = new Vector2f(50.0f + (rand.nextFloat() * 100.0f), 50.0f + (rand.nextFloat() * 100.0f));
         return new Ball(pos, vel);
     }
     
-    private Entity createPaddleOne() {
+    private Paddle createPaddleOne() {
         Vector2f pos = new Vector2f((WORLD_WIDTH * 0.1f) - Paddle.DEFAULT_WIDTH, WORLD_HEIGHT * 0.5f);
         Vector2f vel = new Vector2f(0.0f, 0.0f);
         return new Paddle(pos, vel);
     }
     
-    private Entity createPaddleTwo() {
+    private Paddle createPaddleTwo() {
         Vector2f pos = new Vector2f((WORLD_WIDTH * 0.9f) - Paddle.DEFAULT_WIDTH, WORLD_HEIGHT * 0.5f);
         Vector2f vel = new Vector2f(0.0f, 0.0f);
         return new Paddle(pos, vel);
