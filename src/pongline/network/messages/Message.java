@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pongline.network;
+package pongline.network.messages;
 
 import java.io.Serializable;
+import pongline.network.MessageType;
 
 /**
  *

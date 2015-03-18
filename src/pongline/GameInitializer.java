@@ -1,5 +1,6 @@
 package pongline;
 
+import java.util.logging.Logger;
 import pongline.display.DefaultGameDisplay;
 import pongline.display.GameDisplay;
 import pongline.display.SetupDisplay;
@@ -14,6 +15,9 @@ import pongline.network.CommunicationEngine;
  * @author adam
  */
 public class GameInitializer implements SetupListener {
+
+    /** Logger. */
+    private static final Logger LOGGER = Logger.getLogger(SetupListener.class.getName());
 
     /** The setup display. */
     private final SetupDisplay m_setupDisplay;
@@ -30,15 +34,17 @@ public class GameInitializer implements SetupListener {
     /** A display for rendering the current game state. */
     private final GameDisplay m_display;
 
+    /** A communication engine.  For communicating. */
+    //private final CommunicationEngine m_commEngine;
+
     /** Creates a new GameInitializer */
     public GameInitializer() {
         m_setupDisplay = new SetupDisplay();
         m_setupDisplay.addListener(this);
-
         m_inputManager = new KeyboardInputManager();
         m_communicationEngine = null;
         m_display = new DefaultGameDisplay(m_inputManager);
-        
+
         m_manager = new GameManager(m_display, m_inputManager, m_communicationEngine);
     }
 
@@ -51,13 +57,15 @@ public class GameInitializer implements SetupListener {
     @Override
     public void hostSelected() {
         // Handle 'host' mode being selected
-        throw new UnsupportedOperationException("Not supported yet.");
+        LOGGER.fine("Hosting Game;  IP/Host:  " + m_setupDisplay.getHostIpAddress() + ", port:  " + m_setupDisplay.getLocalPort());
+        //m_commEngine.host(m_setupDisplay.getHostIpAddress(), m_setupDisplay.getLocalPort());
     }
 
     /** {@inheritDoc} */
     @Override
     public void connectSelected() {
         // Handle 'connect' mode being selected
-        throw new UnsupportedOperationException("Not supported yet.");
+        LOGGER.fine("Connect to Game;  IP/Host:  " + m_setupDisplay.getHostIpAddress() + ", port:  " + m_setupDisplay.getRemotePort());
+        //m_commEngine.host(m_setupDisplay.getHostIpAddress(), m_setupDisplay.getRemotePort());
     }
 }

@@ -13,7 +13,7 @@ public enum MessageType {
     /** Ball kinematics message contains the attributes of the ball. */
     BALL_KINEMATICS,
     /** Paddle position messages is for the sender's paddle. */
-    PADDLE_POSITiON,
+    PADDLE_POSITION,
     /** score update message indicates when the sender has been scored upon. */
     SCORE_UPDATE;
     
