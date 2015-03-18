@@ -34,7 +34,7 @@ public class GameInitializer implements SetupListener {
         m_inputManager = new KeyboardInputManager();
         m_display = new DefaultGameDisplay(m_inputManager);
         // BUILD COMM ENGINE HERE
-        m_manager = new GameManager(m_display);
+        m_manager = new GameManager(m_display, m_inputManager);
     }
 
     /** Starts the client, and launches the configuration window. */

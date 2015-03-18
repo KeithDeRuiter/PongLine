@@ -20,6 +20,9 @@ import pongline.data.GameState;
 import pongline.data.Paddle;
 import pongline.data.matlib.Vector2f;
 import pongline.display.GameDisplay;
+import pongline.input.InputControl;
+import pongline.input.InputManager;
+import pongline.input.InputState;
 
 /**
  *
@@ -35,17 +38,22 @@ public class GameManager {
     
     private final GameDisplay display;
     
+    private final InputManager inputManager;
+    
+    Paddle playerOnePaddle;
+    
     public static final float WORLD_WIDTH = 400;
     
     public static final float WORLD_HEIGHT = 300;
     
     private final Random rand;
     
-    public GameManager(GameDisplay display) {
+    public GameManager(GameDisplay display, InputManager inputManager) {
         rand = new Random();
         executor = Executors.newSingleThreadScheduledExecutor();
         previousUpdateTime = System.currentTimeMillis();
         this.display = display;
+        this.inputManager = inputManager;
         entities = new ArrayList<>();
     }
     
@@ -73,7 +81,20 @@ public class GameManager {
         List<GameEvent> events = new ArrayList<>();
         
         //Input
+        InputState inputState = inputManager.getInputState();
         
+        boolean paddleUp = inputState.getControlState(InputControl.PADDLE_UP);
+        boolean paddleDown = inputState.getControlState(InputControl.PADDLE_DOWN);
+        
+        Vector2f playerOnePaddleVelocity = new Vector2f(0.0f, 0.0f);
+        if (paddleUp) {
+            playerOnePaddleVelocity.add(new Vector2f(0.0f, 10.0f));
+        }
+        if (paddleDown) {
+            playerOnePaddleVelocity.add(new Vector2f(0.0f, -10.0f));
+           
+        }
+        playerOnePaddle.setVelocity(playerOnePaddleVelocity);
         
         //Trigger updates for every entity
         for(Entity e : entities) {
