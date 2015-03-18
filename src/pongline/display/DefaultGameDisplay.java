@@ -27,15 +27,15 @@ import pongline.input.KeyboardInputManager;
  * @author LoTB
  */
 public class DefaultGameDisplay implements GameDisplay {
-    
+
     /** The main canvas for display. */
-    private PongCanvas m_pongCanvas;
-    
+    private final PongCanvas m_pongCanvas;
+
     /** The manager of assets. Maintains of mapping of assets to their images or sounds. */
-    private AssetManager m_assMan;
-    
-    /** 
-     * Creates and initializes a new instance of DefaultGameDisplay. 
+    private final AssetManager m_assMan;
+
+    /**
+     * Creates and initializes a new instance of DefaultGameDisplay.
      * @param keyListener Listener to notify of key events
      */
     public DefaultGameDisplay(KeyListener keyListener) {
@@ -47,7 +47,7 @@ public class DefaultGameDisplay implements GameDisplay {
     /**
      * Creates a renderables using the provided states and hands
      * those renderables off to the pong canvas.
-     * @param state 
+     * @param state
      */
     @Override
     public void setState(GameState state) {
@@ -89,11 +89,11 @@ public class DefaultGameDisplay implements GameDisplay {
             }
         }
     }
-    
+
     public static void main(String[] args) {
         DefaultGameDisplay dfg = new DefaultGameDisplay(new KeyboardInputManager());
         GameManager manager = new GameManager(dfg);
         manager.launch();
     }
-    
+
 }

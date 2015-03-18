@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import pongline.PongLine;
 import javax.swing.JFrame;
@@ -24,13 +25,22 @@ import javax.swing.event.DocumentListener;
  */
 public class SetupDisplay {
 
+    // Set up logging.
+    static {
+        System.setProperty("java.util.logging.config.file", "./config/logging.properties");
+    }
+
+    /** A Logger. */
+    private static final Logger LOGGER = Logger.getLogger(SetupDisplay.class.getName());
+
+    /** The top level window of this display.  */
     private JFrame m_frame;
     private JTextField m_remoteIpField;
     private JTextField m_remotePortField;
     private JTextField m_localPortField;
 
-    private static final String DEFAULT_REMOTE_PORT = "56070";
-    private static final String DEFAULT_LOCAL_PORT = "57070";
+    private static final String DEFAULT_REMOTE_PORT = "46200";
+    private static final String DEFAULT_LOCAL_PORT = "56200";
 
     private JButton m_hostButton;
     private JButton m_connectButton;
@@ -77,31 +87,44 @@ public class SetupDisplay {
     }
 
     /**
+     * Returns the IP address of the machine hosting the match.
+     * @return the IP address of the machine hosting the match.
+     */
+    public String getHostIpAddress() {
+        return m_remoteIpField.getText().trim();
+    }
+
+    /**
      * Checks to see if the content of this display is valid.
      * @return true if the content is valid.
      */
-    private boolean isContentValid() {
-        if (Integer.valueOf(m_localPortField.getText()) > 65535) {
+    private boolean isPortValid(int portValue) {
+        if (portValue < 0) {
+            return false;
+        } else if (portValue > 65535) {
             return false;
         }
-        if (Integer.valueOf(m_remotePortField.getText()) > 65535) {
-            return false;
-        }
-        // THIS IS HORRIBLE.  DO THIS BETTER.
-//        try {
-//            InetAddress.getByName(m_remoteIpField.getText());
-//        } catch (UnknownHostException ex) {
-//            // ignored
-//            return false;
-//        }
-
         return true;
+    }
+
+    public boolean isHostValid() {
+        // THIS IS DUMB, DETERMINE THE VALIDITY OF THE IP / HOSTNAME SMARTER.
+        return !m_remoteIpField.getText().trim().isEmpty();
     }
 
     /** Updates the enabled state of the buttons, based on currently entered values. */
     private void updateButtonState() {
-        m_connectButton.setEnabled(isContentValid());
-        m_hostButton.setEnabled(isContentValid());
+        if (!m_remotePortField.getText().isEmpty()) {
+            m_connectButton.setEnabled(isHostValid() && isPortValid(Integer.valueOf(m_remotePortField.getText())));
+        } else {
+            m_connectButton.setEnabled(false);
+        }
+
+        if (!m_localPortField.getText().isEmpty()) {
+            m_hostButton.setEnabled(isHostValid() && isPortValid(Integer.valueOf(m_localPortField.getText())));
+        } else {
+            m_hostButton.setEnabled(false);
+        }
     }
 
     /** Initialize the display components */
@@ -214,7 +237,6 @@ public class SetupDisplay {
         gbc.gridx = 1;
         m_frame.add(m_connectButton, gbc);
     }
-
 
     /** Test Main */
     public static void main(String[] args) {
