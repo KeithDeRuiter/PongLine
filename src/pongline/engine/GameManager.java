@@ -42,6 +42,10 @@ public class GameManager {
     
     Paddle playerOnePaddle;
     
+    private int playerOneScore;
+    
+    private int playerTwoScore;
+    
     public static final float WORLD_WIDTH = 400;
     
     public static final float WORLD_HEIGHT = 300;
@@ -55,6 +59,8 @@ public class GameManager {
         this.display = display;
         this.inputManager = inputManager;
         entities = new ArrayList<>();
+        playerOneScore = 0;
+        playerTwoScore = 0;
     }
     
     
@@ -106,7 +112,7 @@ public class GameManager {
         //Logic
         
         //Display
-        display.setState(new GameState(entities, events));
+        display.setState(new GameState(entities, events, playerOneScore, playerTwoScore));
     }
     
     private Entity createRandomBall() {
