@@ -1,6 +1,6 @@
 package pongline.network;
 
-import java.util.List;
+import pongline.network.messages.Message;
 import java.util.Queue;
 
 /**
